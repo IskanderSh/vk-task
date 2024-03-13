@@ -1,0 +1,47 @@
+swagger: "2.0"
+info:
+  title: VK test task service
+  description: specification for VK test task service
+  version: 0.0.1
+host:
+  localhost
+schemes:
+  - http
+  - https
+basePath: /
+
+paths:
+  /api/v1/actor/create:
+    post:
+      tags:
+        - actor
+      summary: add a new actor
+      operationId: createActor
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: actor
+          description: The actor to create
+          schema:
+            $ref: '#definitions/Actor'
+      responses:
+        200:
+          description: OK
+
+
+definitions:
+  Actor:
+    properties:
+      name:
+        type: string
+      sex:
+        type: string
+      birthday:
+        type:
+    required:
+      - name
+      - sex
+      - birthday
