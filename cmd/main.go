@@ -25,6 +25,7 @@ func main() {
 	log.Info("logger initialized successfully")
 
 	//application := app.NewServer(log, cfg)
+
 }
 
 func setupLogger(cfg *config.Config) *slog.Logger {
