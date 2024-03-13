@@ -25,5 +25,3 @@ jobs:
             git reset --hard
             
             git pull origin master
-            
-            make docker-up-prod
