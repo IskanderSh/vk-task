@@ -26,7 +26,7 @@ paths:
           name: actor
           description: The actor to create
           schema:
-            $ref: '#definitions/Actor'
+            $ref: '#/definitions/Actor'
       responses:
         200:
           description: OK
