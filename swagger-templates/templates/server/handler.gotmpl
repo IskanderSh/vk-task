@@ -1,0 +1,5 @@
+package handlers
+
+func (h *Handler){{ pascalize .Name }}(w http.ResponseWriter, r *http.Request) {
+    return middleware.NotImplemented("operation {{ .Package }} {{ pascalize .Name }} has not yet been implemented")
+}

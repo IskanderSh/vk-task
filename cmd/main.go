@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/IskanderSh/vk-task/internal/app"
 	"github.com/IskanderSh/vk-task/internal/config"
 )
 
@@ -24,8 +25,13 @@ func main() {
 	log := setupLogger(cfg)
 	log.Info("logger initialized successfully")
 
-	//application := app.NewServer(log, cfg)
+	application := app.NewServer(log, cfg)
 
+	if err := application.HTTPServer.ListenAndServe(); err != nil {
+		panic(err)
+	}
+
+	log.Info("application started successfully")
 }
 
 func setupLogger(cfg *config.Config) *slog.Logger {

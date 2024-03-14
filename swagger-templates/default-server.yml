@@ -1,2 +1,13 @@
 layout:
-  application:
+  models:
+    - name: definition
+      source: asset:model
+      target: "{{ joinFilePath .Target .ModelPackage }}"
+      file_name: "{{ (snakize (pascalize .Name)) }}.go"
+
+  operations:
+    - name: handlerFns
+      source: serverHandler
+      target: "./internal/handler"
+      file_name: "{{ (snakize (pascalize .Name)) }}.go"
+      skip_exists: true

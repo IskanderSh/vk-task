@@ -40,7 +40,8 @@ definitions:
       sex:
         type: string
       birthday:
-        type:
+        type: string
+        format: date
     required:
       - name
       - sex
