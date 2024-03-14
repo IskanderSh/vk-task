@@ -8,6 +8,8 @@ import (
 
 	"github.com/IskanderSh/vk-task/internal/config"
 	"github.com/IskanderSh/vk-task/internal/handlers"
+	"github.com/IskanderSh/vk-task/internal/services"
+	"github.com/IskanderSh/vk-task/internal/storage"
 )
 
 type Server struct {
@@ -15,8 +17,20 @@ type Server struct {
 }
 
 func NewServer(log *slog.Logger, cfg *config.Config) *Server {
-	handler := handlers.NewHandler(log)
+	// Storages
+	db, err := storage.NewStorage(&cfg.Storage)
+	if err != nil {
+		panic(err)
+	}
 
+	// Services
+	actorService := services.NewActorService(log, db)
+	filmService := services.NewFilmService(log, db)
+
+	// Handlers
+	handler := handlers.NewHandler(log, actorService, filmService)
+
+	// Init Routes
 	router := handler.Routes()
 
 	httpServer := &http.Server{

@@ -6,12 +6,26 @@ import (
 )
 
 type Handler struct {
-	log *slog.Logger
+	log          *slog.Logger
+	actorService ActorProvider
+	filmService  FilmProvider
 }
 
-func NewHandler(log *slog.Logger) *Handler {
+type ActorProvider interface {
+}
+
+type FilmProvider interface {
+}
+
+func NewHandler(
+	log *slog.Logger,
+	actorProvider ActorProvider,
+	filmProvider FilmProvider,
+) *Handler {
 	return &Handler{
-		log: log,
+		log:          log,
+		actorService: actorProvider,
+		filmService:  filmProvider,
 	}
 }
 

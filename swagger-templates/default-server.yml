@@ -8,6 +8,6 @@ layout:
   operations:
     - name: handlerFns
       source: serverHandler
-      target: "./internal/handler"
+      target: "./internal/handlers"
       file_name: "{{ (snakize (pascalize .Name)) }}.go"
       skip_exists: true
