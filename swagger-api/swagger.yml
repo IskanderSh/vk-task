@@ -22,7 +22,7 @@ paths:
           name: registerUser
           description: The user for register
           schema:
-            $ref: '#/definition/UserSignUp'
+            $ref: '#/definitions/UserSignUp'
       responses:
         200:
           description: OK
@@ -41,7 +41,7 @@ paths:
           name: loginUser
           description: The user for login
           schema:
-            $ref: '#/definition/UserSignIn'
+            $ref: '#/definitions/UserSignIn'
       responses:
         200:
           description: OK
