@@ -23,17 +23,81 @@ paths:
         - application/json
       parameters:
         - in: body
-          name: actor
+          name: createActor
           description: The actor to create
           schema:
-            $ref: '#/definitions/Actor'
+            $ref: '#/definitions/GetActor'
       responses:
         200:
           description: OK
-
+        400:
+          description: Bad request
+        500:
+          description: Internal error
+  /api/v1/actor/update:
+    put:
+      tags:
+        - actor
+      summary: updating actor's information
+      operationId: updateActor
+      parameters:
+        - in: body
+          name: updateActor
+          description: The body of updating actor
+          schema:
+            $ref: '#/definitions/UpdateActor'
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad request
+        404:
+          description: Not found actor
+        500:
+          description: Internal error
+  /api/v1/actor/delete/{id}:
+    delete:
+      tags:
+        - actor
+      summary: deleting actor
+      operationId: deleteActor
+      parameters:
+        - name: id
+          in: path
+          description: ID of deleting actor
+          type: integer
+          required: true
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad request
+        404:
+          description: Not found actor
+        500:
+          description: Internal error
+  /api/v1/film/create:
+    post:
+      tags:
+        - film
+      summary: add a new film
+      operationId: createFilm
+      parameters:
+        - in: body
+          name: createFilm
+          description: The film to create
+          schema:
+            $ref: '#/definitions/GetActor'
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad request
+        500:
+          description: Internal error
 
 definitions:
-  Actor:
+  GetActor:
     properties:
       name:
         type: string
@@ -46,3 +110,31 @@ definitions:
       - name
       - sex
       - birthday
+  UpdateActor:
+    properties:
+      name:
+        type: string
+      sex:
+        type: string
+      birthday:
+        type: string
+        format: date
+  GetFilm:
+    properties:
+      name:
+        type: string
+        minLength: 1
+        maxLength: 150
+      description:
+        type: string
+        maxLength: 1000
+      date:
+        type: string
+        format: date
+      rating:
+        type: integer
+        minimum: 0
+        maximum: 10
+      actors:
+        allOf:
+          -

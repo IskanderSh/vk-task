@@ -9,16 +9,12 @@ import (
 	"github.com/pkg/errors"
 )
 
-type Storage struct {
-	db *sql.DB
-}
-
-func NewStorage(cfg *config.Storage) (*Storage, error) {
+func NewStorage(cfg *config.Storage) (*sql.DB, error) {
 	const op = "storage.NewStorage"
 
 	connectionString := fmt.Sprintf("host=%s port=%d user=%s password=%s sslmode=disable",
 		cfg.Host, cfg.Port, cfg.User, cfg.Password)
-
+	fmt.Println(connectionString)
 	db, err := sql.Open("postgres", connectionString)
 	if err != nil {
 		return nil, errors.Wrap(err, op)
@@ -28,7 +24,5 @@ func NewStorage(cfg *config.Storage) (*Storage, error) {
 		return nil, errors.Wrap(err, op)
 	}
 
-	return &Storage{
-		db: db,
-	}, nil
+	return db, nil
 }

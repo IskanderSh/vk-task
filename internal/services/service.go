@@ -1,6 +1,10 @@
 package services
 
-import "log/slog"
+import (
+	"errors"
+	"log/slog"
+	"time"
+)
 
 type ActorService struct {
 	log     *slog.Logger
@@ -8,6 +12,7 @@ type ActorService struct {
 }
 
 type ActorStorage interface {
+	CreateActor(name, sex string, birthday time.Time) error
 }
 
 type FilmService struct {
@@ -17,6 +22,13 @@ type FilmService struct {
 
 type FilmStorage interface {
 }
+
+var (
+	validSex = []string{"male", "female"}
+
+	ErrInvalidCredentials = errors.New("invalid credentials")
+	ErrIncorrectTime      = errors.New("invalid time, it should be less then now")
+)
 
 func NewActorService(log *slog.Logger, storage ActorStorage) *ActorService {
 	return &ActorService{

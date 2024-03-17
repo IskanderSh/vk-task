@@ -17,3 +17,6 @@ gen-server-windows:
 	-C ./swagger-templates/default-server.yml \
 	--template-dir ./swagger-templates/templates \
  	--name server
+
+docker-up:
+	docker-compose up -d

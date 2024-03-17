@@ -23,8 +23,10 @@ func NewServer(log *slog.Logger, cfg *config.Config) *Server {
 		panic(err)
 	}
 
+	actorStorage := storage.NewActorStorage(db)
+
 	// Services
-	actorService := services.NewActorService(log, db)
+	actorService := services.NewActorService(log, actorStorage)
 	filmService := services.NewFilmService(log, db)
 
 	// Handlers

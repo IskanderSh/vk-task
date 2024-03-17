@@ -1,8 +1,11 @@
 package handlers
 
 import (
+	"context"
 	"log/slog"
 	"net/http"
+
+	"github.com/IskanderSh/vk-task/internal/generated/models"
 )
 
 type Handler struct {
@@ -12,6 +15,7 @@ type Handler struct {
 }
 
 type ActorProvider interface {
+	AddActor(ctx context.Context, actor *models.Actor) error
 }
 
 type FilmProvider interface {
