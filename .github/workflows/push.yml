@@ -8,6 +8,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Test
+        run: go test -race -vet=off ./...
+
       - name: Deploy using ssh
         uses: appleboy/ssh-action@master
         with:

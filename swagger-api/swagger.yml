@@ -11,6 +11,37 @@ schemes:
 basePath: /
 
 paths:
+  /auth/sign-up:
+    post:
+      tags:
+        - auth
+      summary: sign-up for new user
+      operationId: register
+      parameters:
+        - in: body
+          name: registerUser
+          description: The user for register
+          schema:
+            $ref: '#/definition/UserSignUp'
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad request
+        500:
+          description: Internal error
+  /auth/sign-in:
+    post:
+      tags:
+        - auth
+      summary: sign-in for user
+      operationId: login
+      parameters:
+        - in: body
+          name: loginUser
+          description: The user for login
+          schema:
+            $ref: '#/definition/UserSignIn'
   /api/v1/actor/create:
     post:
       tags:
@@ -87,7 +118,7 @@ paths:
           name: createFilm
           description: The film to create
           schema:
-            $ref: '#/definitions/GetActor'
+            $ref: '#/definitions/Film'
       responses:
         200:
           description: OK
@@ -97,6 +128,20 @@ paths:
           description: Internal error
 
 definitions:
+  UserSignUp:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+  UserSignIn:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
   GetActor:
     properties:
       name:
@@ -119,7 +164,7 @@ definitions:
       birthday:
         type: string
         format: date
-  GetFilm:
+  Film:
     properties:
       name:
         type: string
@@ -137,4 +182,4 @@ definitions:
         maximum: 10
       actors:
         allOf:
-          -
+          - type: string
