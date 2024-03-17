@@ -10,6 +10,8 @@ import (
 	"github.com/IskanderSh/vk-task/internal/handlers"
 	"github.com/IskanderSh/vk-task/internal/services"
 	"github.com/IskanderSh/vk-task/internal/storage"
+	"github.com/IskanderSh/vk-task/internal/storage/actor"
+	"github.com/IskanderSh/vk-task/internal/storage/user"
 )
 
 type Server struct {
@@ -23,14 +25,16 @@ func NewServer(log *slog.Logger, cfg *config.Config) *Server {
 		panic(err)
 	}
 
-	actorStorage := storage.NewActorStorage(db)
+	actorStorage := actor.NewStorage(db)
+	userStorage := user.NewStorage(db)
 
 	// Services
 	actorService := services.NewActorService(log, actorStorage)
 	filmService := services.NewFilmService(log, db)
+	userService := services.NewUserService(log, userStorage)
 
 	// Handlers
-	handler := handlers.NewHandler(log, actorService, filmService)
+	handler := handlers.NewHandler(log, actorService, filmService, userService)
 
 	// Init Routes
 	router := handler.Routes()

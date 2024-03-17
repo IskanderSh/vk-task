@@ -1,9 +1,10 @@
-package storage
+package actor
 
 import (
 	"testing"
 	"time"
 
+	"github.com/IskanderSh/vk-task/internal/entities"
 	"github.com/lib/pq"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"
@@ -16,32 +17,26 @@ func TestCreateActor(t *testing.T) {
 	}
 	defer db.Close()
 
-	storage := NewActorStorage(db)
+	storage := NewStorage(db)
 
-	type args struct {
-		name     string
-		sex      string
-		birthday time.Time
-	}
-
-	type mockBehavior func(args args)
+	type mockBehavior func(actor entities.CreateActor)
 
 	testTable := []struct {
 		name         string
-		args         args
+		actor        entities.CreateActor
 		mockBehavior mockBehavior
 		wantErr      bool
 		err          error
 	}{
 		{
 			name: "OK",
-			args: args{
-				name:     "Iskander",
-				sex:      "male",
-				birthday: time.Date(2004, 10, 11, 0, 0, 0, 0, time.UTC),
+			actor: entities.CreateActor{
+				Name:     "Iskander",
+				Sex:      "male",
+				Birthday: time.Date(2004, 10, 11, 0, 0, 0, 0, time.UTC),
 			},
-			mockBehavior: func(args args) {
-				mock.ExpectExec("INSERT INTO actors").WithArgs(args.name, args.sex, args.birthday).
+			mockBehavior: func(actor entities.CreateActor) {
+				mock.ExpectExec("INSERT INTO actors").WithArgs(actor.Name, actor.Sex, actor.Birthday).
 					WillReturnResult(sqlmock.NewResult(1, 1))
 			},
 			wantErr: false,
@@ -49,13 +44,13 @@ func TestCreateActor(t *testing.T) {
 		},
 		{
 			name: "Duplicate name",
-			args: args{
-				name:     "Duplicated",
-				sex:      "female",
-				birthday: time.Date(2004, 10, 11, 0, 0, 0, 0, time.UTC),
+			actor: entities.CreateActor{
+				Name:     "Duplicated",
+				Sex:      "female",
+				Birthday: time.Date(2004, 10, 11, 0, 0, 0, 0, time.UTC),
 			},
-			mockBehavior: func(args args) {
-				mock.ExpectExec("INSERT INTO actors").WithArgs(args.name, args.sex, args.birthday).
+			mockBehavior: func(actor entities.CreateActor) {
+				mock.ExpectExec("INSERT INTO actors").WithArgs(actor.Name, actor.Sex, actor.Birthday).
 					WillReturnError(&pq.Error{Code: "23505"})
 			},
 			wantErr: true,
@@ -65,12 +60,12 @@ func TestCreateActor(t *testing.T) {
 
 	for _, testCase := range testTable {
 		t.Run(testCase.name, func(t *testing.T) {
-			testCase.mockBehavior(testCase.args)
+			testCase.mockBehavior(testCase.actor)
 
-			err = storage.CreateActor(testCase.args.name, testCase.args.sex, testCase.args.birthday)
+			err = storage.CreateActor(&testCase.actor)
 			if testCase.wantErr {
 				assert.Error(t, err)
-				assert.Equal(t, ErrDuplicateName, err)
+				assert.Equal(t, testCase.err, err)
 			} else {
 				assert.NoError(t, err)
 			}

@@ -2,8 +2,10 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"log/slog"
-	"time"
+
+	"github.com/IskanderSh/vk-task/internal/entities"
 )
 
 type ActorService struct {
@@ -12,7 +14,7 @@ type ActorService struct {
 }
 
 type ActorStorage interface {
-	CreateActor(name, sex string, birthday time.Time) error
+	CreateActor(actor *entities.CreateActor) error
 }
 
 type FilmService struct {
@@ -23,11 +25,23 @@ type FilmService struct {
 type FilmStorage interface {
 }
 
+type UserService struct {
+	log     *slog.Logger
+	storage UserStorage
+}
+
+type UserStorage interface {
+	CreateUser(user *entities.CreateUser) error
+}
+
 var (
-	validSex = []string{"male", "female"}
+	PasswordMinChars = 4
+	PasswordMaxChars = 40
 
 	ErrInvalidCredentials = errors.New("invalid credentials")
-	ErrIncorrectTime      = errors.New("invalid time, it should be less then now")
+	ErrInvalidEmail       = errors.New("incorrect email")
+	ErrInvalidPassword    = errors.New(fmt.Sprintf("password should be more than %d symbols and less than %d",
+		PasswordMinChars, PasswordMaxChars))
 )
 
 func NewActorService(log *slog.Logger, storage ActorStorage) *ActorService {
@@ -39,6 +53,13 @@ func NewActorService(log *slog.Logger, storage ActorStorage) *ActorService {
 
 func NewFilmService(log *slog.Logger, storage FilmStorage) *FilmService {
 	return &FilmService{
+		log:     log,
+		storage: storage,
+	}
+}
+
+func NewUserService(log *slog.Logger, storage UserStorage) *UserService {
+	return &UserService{
 		log:     log,
 		storage: storage,
 	}

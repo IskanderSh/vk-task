@@ -1,4 +1,4 @@
-package storage
+package actor
 
 const createActorQuery = `INSERT INTO actors (name, sex, birthday) 
-			VALUES ($1, $2, $3) RETURNING id`
+			VALUES ($1, $2, $3)`

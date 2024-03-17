@@ -12,6 +12,11 @@ type Handler struct {
 	log          *slog.Logger
 	actorService ActorProvider
 	filmService  FilmProvider
+	userService  UserProvider
+}
+
+type UserProvider interface {
+	AddUser(ctx context.Context, input *models.UserSignUp) error
 }
 
 type ActorProvider interface {
@@ -25,11 +30,13 @@ func NewHandler(
 	log *slog.Logger,
 	actorProvider ActorProvider,
 	filmProvider FilmProvider,
+	userProvider UserProvider,
 ) *Handler {
 	return &Handler{
 		log:          log,
 		actorService: actorProvider,
 		filmService:  filmProvider,
+		userService:  userProvider,
 	}
 }
 
