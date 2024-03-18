@@ -27,6 +27,9 @@ type ActorProvider interface {
 }
 
 type FilmProvider interface {
+	AddFilm(ctx context.Context, input *models.Film) error
+	UpdateFilm(ctx context.Context, input *models.UpdateFilm) error
+	DeleteFilm(ctx context.Context, name string) error
 }
 
 func NewHandler(
