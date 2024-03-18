@@ -25,10 +25,9 @@ func main() {
 	log := setupLogger(cfg)
 	log.Info("logger initialized successfully")
 
-	application := app.NewServer(log, cfg)
-
-	if err := application.HTTPServer.ListenAndServe(); err != nil {
-		panic(err)
+	err := app.NewServer(log, cfg)
+	if err != nil {
+		log.Error(err.Error())
 	}
 
 	log.Info("application started successfully")

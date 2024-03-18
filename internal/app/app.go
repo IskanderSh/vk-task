@@ -14,11 +14,7 @@ import (
 	"github.com/IskanderSh/vk-task/internal/storage/user"
 )
 
-type Server struct {
-	HTTPServer *http.Server
-}
-
-func NewServer(log *slog.Logger, cfg *config.Config) *Server {
+func NewServer(log *slog.Logger, cfg *config.Config) error {
 	// Storages
 	db, err := storage.NewStorage(&cfg.Storage)
 	if err != nil {
@@ -47,7 +43,5 @@ func NewServer(log *slog.Logger, cfg *config.Config) *Server {
 		WriteTimeout: 10 * time.Second,
 	}
 
-	return &Server{
-		HTTPServer: httpServer,
-	}
+	return httpServer.ListenAndServe()
 }
