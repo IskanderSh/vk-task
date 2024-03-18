@@ -14,27 +14,27 @@ import (
 func (s *UserService) AddUser(ctx context.Context, input *models.UserSignUp) error {
 	const op = "service.AddUser"
 
-	if !validator.Matches(input.Email, validator.ValidEmail) {
+	if !validator.Matches(*input.Email, validator.ValidEmail) {
 		return wrapper.Wrap(op, ErrInvalidEmail)
 	}
 
-	if !validator.StringValueBetween(input.Password, PasswordMinChars, PasswordMaxChars) {
+	if !validator.StringValueBetween(*input.Password, PasswordMinChars, PasswordMaxChars) {
 		return wrapper.Wrap(op, ErrInvalidPassword)
 	}
 
-	if !validator.PermittedValue(input.Role, validator.ValidRole...) {
+	if !validator.PermittedValue(*input.Role, validator.ValidRole...) {
 		return wrapper.Wrap(op, ErrInvalidCredentials)
 	}
 
-	hashPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), 12)
+	hashPassword, err := bcrypt.GenerateFromPassword([]byte(*input.Password), 12)
 	if err != nil {
 		return wrapper.Wrap(op, err)
 	}
 
 	user := entities.User{
-		Email:    input.Email,
+		Email:    *input.Email,
 		Password: string(hashPassword),
-		Role:     input.Role,
+		Role:     *input.Role,
 	}
 
 	if err := s.storage.CreateUser(&user); err != nil {

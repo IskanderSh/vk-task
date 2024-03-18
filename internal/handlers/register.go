@@ -28,7 +28,7 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 		response.NewErrorResponse(w, log, "Invalid input body", http.StatusBadRequest, &err)
 		return
 	}
-	log.Debug(fmt.Sprintf("successfully decode input body with email: %s", input.Email))
+	log.Debug(fmt.Sprintf("successfully decode input body with email: %s", *input.Email))
 
 	if err := h.userService.AddUser(r.Context(), &input); err != nil {
 		response.NewErrorResponse(w, log, "Internal error", http.StatusInternalServerError, &err)
