@@ -25,7 +25,9 @@ func (h *Handler) authenticateAdmin(next http.Handler) http.Handler {
 			return
 		}
 
-		log.Info(fmt.Sprintf("get payload with params: sub - %s, role - %s", payload["sub"].(string), payload["role"].(string)))
+		log.Debug(fmt.Sprintf("get payload with params: sub - %s, role - %s", payload["sub"].(string), payload["role"].(string)))
+
+		next.ServeHTTP(w, r)
 	})
 }
 
@@ -42,10 +44,9 @@ func jwtPayloadFromRequest(r *http.Request, log *slog.Logger) (jwt.MapClaims, bo
 		return []byte(services.SigningKey), nil
 	})
 	if err != nil {
-		log.Error("couldn't get jwt token from header")
-		log.Error(err.Error())
+		log.Error("wrong type of JWT token")
+		return nil, false
 	}
-	log.Debug("successfully get jwt token from header")
 
 	payload, ok := jwtToken.Claims.(jwt.MapClaims)
 	if !ok {
