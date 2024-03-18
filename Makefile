@@ -19,7 +19,7 @@ gen-server-windows:
  	--name server
 
 migrate:
-	goose -dir "./migrations" postgres "host=postgres port=5432 user=postgres password=password" up
+	goose -dir "./migrations" postgres "host=172.20.0.2 port=5432 user=postgres password=password" up
 
 docker-up:
 	docker-compose up -d
