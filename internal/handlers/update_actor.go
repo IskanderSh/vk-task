@@ -18,8 +18,8 @@ func (h *Handler) UpdateActor(w http.ResponseWriter, r *http.Request) {
 	log := h.log.With(
 		slog.String("op", op))
 
-	if r.Method != http.MethodPost {
-		w.Header().Set("Allow", http.MethodPost)
+	if r.Method != http.MethodPut {
+		w.Header().Set("Allow", http.MethodPut)
 		response.NewErrorResponse(w, log, "Method not allowed", http.StatusMethodNotAllowed, nil)
 		return
 	}
