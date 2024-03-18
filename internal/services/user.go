@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	signingKey = []byte("qrkjk#4#%35FSFJlja#4353KSFjH")
+	SigningKey = []byte("qrkjk#4#%35FSFJlja#4353KSFjH")
 )
 
 func (s *UserService) AddUser(ctx context.Context, input *models.UserSignUp) error {
@@ -84,7 +84,7 @@ func (s *UserService) Login(ctx context.Context, input *models.UserSignIn) (stri
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
 
-	t, err := token.SignedString(signingKey)
+	t, err := token.SignedString(SigningKey)
 	if err != nil {
 		return "", wrapper.Wrap(op, err)
 	}

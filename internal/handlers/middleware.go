@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/IskanderSh/vk-task/internal/lib/error/response"
+	"github.com/IskanderSh/vk-task/internal/services"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -36,16 +37,25 @@ func AuthenticateUser(next http.Handler) http.Handler {
 
 func jwtPayloadFromRequest(r *http.Request, log *slog.Logger) (jwt.MapClaims, bool) {
 	contextValue := r.Context().Value("Authorization")
-	log.Debug(fmt.Sprintf("context value: %s", contextValue))
+	log.Debug(fmt.Sprintf("context value: %v", contextValue))
 
 	headerValue := r.Header.Get("Authorization")
 	log.Debug(fmt.Sprintf("header value: %s", headerValue))
 
-	jwtToken, ok := r.Context().Value("Authorization").(*jwt.Token)
-	if !ok {
-		log.Error("wrong type of JWT token")
-		return nil, false
+	jwtToken, err := jwt.ParseWithClaims(headerValue, jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(services.SigningKey), nil
+	})
+	if err != nil {
+		log.Error("couldn't get jwt token from header")
+		log.Error(err.Error())
 	}
+	log.Debug("successfully get jwt token from header")
+
+	//jwtToken, ok := r.Context().Value("Authorization").(*jwt.Token)
+	//if !ok {
+	//	log.Error("wrong type of JWT token")
+	//	return nil, false
+	//}
 
 	payload, ok := jwtToken.Claims.(jwt.MapClaims)
 	if !ok {
