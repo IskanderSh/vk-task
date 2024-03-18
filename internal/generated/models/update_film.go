@@ -14,44 +14,36 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// Film film
+// UpdateFilm update film
 //
-// swagger:model Film
-type Film struct {
+// swagger:model UpdateFilm
+type UpdateFilm struct {
 
 	// actors
-	// Required: true
 	Actors []string `json:"actors"`
 
 	// date
-	// Required: true
 	// Format: date
-	Date *strfmt.Date `json:"date"`
+	Date strfmt.Date `json:"date,omitempty"`
 
 	// description
 	// Max Length: 1000
 	Description string `json:"description,omitempty"`
 
 	// name
-	// Required: true
 	// Max Length: 150
 	// Min Length: 1
-	Name *string `json:"name"`
+	Name string `json:"name,omitempty"`
 
 	// rating
-	// Required: true
 	// Maximum: 10
 	// Minimum: 0
-	Rating *int64 `json:"rating"`
+	Rating *int64 `json:"rating,omitempty"`
 }
 
-// Validate validates this film
-func (m *Film) Validate(formats strfmt.Registry) error {
+// Validate validates this update film
+func (m *UpdateFilm) Validate(formats strfmt.Registry) error {
 	var res []error
-
-	if err := m.validateActors(formats); err != nil {
-		res = append(res, err)
-	}
 
 	if err := m.validateDate(formats); err != nil {
 		res = append(res, err)
@@ -75,19 +67,9 @@ func (m *Film) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Film) validateActors(formats strfmt.Registry) error {
-
-	if err := validate.Required("actors", "body", m.Actors); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Film) validateDate(formats strfmt.Registry) error {
-
-	if err := validate.Required("date", "body", m.Date); err != nil {
-		return err
+func (m *UpdateFilm) validateDate(formats strfmt.Registry) error {
+	if swag.IsZero(m.Date) { // not required
+		return nil
 	}
 
 	if err := validate.FormatOf("date", "body", "date", m.Date.String(), formats); err != nil {
@@ -97,7 +79,7 @@ func (m *Film) validateDate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Film) validateDescription(formats strfmt.Registry) error {
+func (m *UpdateFilm) validateDescription(formats strfmt.Registry) error {
 	if swag.IsZero(m.Description) { // not required
 		return nil
 	}
@@ -109,27 +91,25 @@ func (m *Film) validateDescription(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Film) validateName(formats strfmt.Registry) error {
+func (m *UpdateFilm) validateName(formats strfmt.Registry) error {
+	if swag.IsZero(m.Name) { // not required
+		return nil
+	}
 
-	if err := validate.Required("name", "body", m.Name); err != nil {
+	if err := validate.MinLength("name", "body", m.Name, 1); err != nil {
 		return err
 	}
 
-	if err := validate.MinLength("name", "body", *m.Name, 1); err != nil {
-		return err
-	}
-
-	if err := validate.MaxLength("name", "body", *m.Name, 150); err != nil {
+	if err := validate.MaxLength("name", "body", m.Name, 150); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (m *Film) validateRating(formats strfmt.Registry) error {
-
-	if err := validate.Required("rating", "body", m.Rating); err != nil {
-		return err
+func (m *UpdateFilm) validateRating(formats strfmt.Registry) error {
+	if swag.IsZero(m.Rating) { // not required
+		return nil
 	}
 
 	if err := validate.MinimumInt("rating", "body", *m.Rating, 0, false); err != nil {
@@ -143,13 +123,13 @@ func (m *Film) validateRating(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this film based on context it is used
-func (m *Film) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validates this update film based on context it is used
+func (m *UpdateFilm) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *Film) MarshalBinary() ([]byte, error) {
+func (m *UpdateFilm) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -157,8 +137,8 @@ func (m *Film) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *Film) UnmarshalBinary(b []byte) error {
-	var res Film
+func (m *UpdateFilm) UnmarshalBinary(b []byte) error {
+	var res UpdateFilm
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
