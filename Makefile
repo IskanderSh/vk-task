@@ -18,5 +18,8 @@ gen-server-windows:
 	--template-dir ./swagger-templates/templates \
  	--name server
 
+migrate:
+	goose -dir "./migrations" postgres "host=postgres port=5432 user=postgres password=password" up
+
 docker-up:
 	docker-compose up -d
