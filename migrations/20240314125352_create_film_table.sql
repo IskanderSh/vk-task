@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS films (
     description VARCHAR(1000),
     date DATE,
     rating INTEGER,
-    actors STRING[],
+    actors TEXT[],
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 -- +goose StatementEnd
