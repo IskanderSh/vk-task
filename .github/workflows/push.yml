@@ -28,5 +28,7 @@ jobs:
             docker stop application
             
             docker rm application
+            
+            docker rmi application
 
             make docker-up
