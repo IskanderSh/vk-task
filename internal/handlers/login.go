@@ -38,5 +38,5 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	log.Debug("successfully authenticate user")
 
 	w.Header().Set("Authorization", token)
-	w.Write([]byte("successfully authenticate"))
+	w.Write([]byte(token))
 }

@@ -44,6 +44,9 @@ func NewHandler(
 func (h *Handler) Routes() *http.ServeMux {
 	router := http.NewServeMux()
 
+	router.HandleFunc("/auth/sign-up", h.Register)
+	router.HandleFunc("/auth/sign-in", h.Login)
+
 	router.Handle("/api/v1/actor/create", h.authenticateAdmin(http.HandlerFunc(h.createActor)))
 
 	return router
