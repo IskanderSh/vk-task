@@ -18,13 +18,13 @@ import (
 type UserSignUp struct {
 
 	// email
-	Email *string `json:"email,omitempty"`
+	Email string `json:"email,omitempty"`
 
 	// password
-	Password *string `json:"password,omitempty"`
+	Password string `json:"password,omitempty"`
 
 	// role
-	Role *string `json:"role,omitempty"`
+	Role string `json:"role,omitempty"`
 }
 
 // Validate validates this user sign up
