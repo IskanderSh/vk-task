@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"log/slog"
 	"net/http"
 
@@ -10,8 +9,10 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-type tokenClaims struct {
-}
+var (
+	adminRole = "admin"
+	userRole  = "user"
+)
 
 func (h *Handler) authenticateAdmin(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -25,15 +26,45 @@ func (h *Handler) authenticateAdmin(next http.Handler) http.Handler {
 			return
 		}
 
-		log.Debug(fmt.Sprintf("get payload with params: sub - %s, role - %s", payload["sub"].(string), payload["role"].(string)))
+		role, ok := payload["role"].(string)
+		if !ok {
+			response.NewErrorResponse(w, log, "Internal error", http.StatusInternalServerError, nil)
+			return
+		}
+
+		if role != adminRole {
+			response.NewErrorResponse(w, log, "Don't have enough permission", http.StatusUnauthorized, nil)
+			return
+		}
 
 		next.ServeHTTP(w, r)
 	})
 }
 
-func AuthenticateUser(next http.Handler) http.Handler {
+func (h *Handler) AuthenticateUser(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		const op = "middleware.AuthenticateAdmin"
 
+		log := h.log.With(slog.String("op", op))
+
+		payload, ok := jwtPayloadFromRequest(r, log)
+		if !ok {
+			response.NewErrorResponse(w, log, "Unauthorized user", http.StatusUnauthorized, nil)
+			return
+		}
+
+		role, ok := payload["role"].(string)
+		if !ok {
+			response.NewErrorResponse(w, log, "Internal error", http.StatusInternalServerError, nil)
+			return
+		}
+
+		if role != adminRole || role != userRole {
+			response.NewErrorResponse(w, log, "Don't have enough permission", http.StatusUnauthorized, nil)
+			return
+		}
+
+		next.ServeHTTP(w, r)
 	})
 }
 
