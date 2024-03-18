@@ -23,3 +23,6 @@ migrate:
 
 docker-up:
 	docker-compose up -d
+
+mockgen:
+	mockgen -source=./internal/handlers/handler.go -destination=./internal/services/mocks/mock.go
