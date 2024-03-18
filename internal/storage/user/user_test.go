@@ -18,23 +18,23 @@ func TestCreateUser(t *testing.T) {
 
 	storage := NewStorage(db)
 
-	type mockBehavior func(user entities.CreateUser)
+	type mockBehavior func(user entities.User)
 
 	testTable := []struct {
 		name         string
-		user         entities.CreateUser
+		user         entities.User
 		mockBehavior mockBehavior
 		wantErr      bool
 		err          error
 	}{
 		{
 			name: "OK",
-			user: entities.CreateUser{
+			user: entities.User{
 				Email:    "admin@admin.com",
 				Password: "admin",
 				Role:     "admin",
 			},
-			mockBehavior: func(user entities.CreateUser) {
+			mockBehavior: func(user entities.User) {
 				mock.ExpectExec("INSERT INTO users").WithArgs(user.Email, user.Password, user.Role).
 					WillReturnResult(sqlmock.NewResult(1, 1))
 			},
@@ -43,12 +43,12 @@ func TestCreateUser(t *testing.T) {
 		},
 		{
 			name: "Duplicate email",
-			user: entities.CreateUser{
+			user: entities.User{
 				Email:    "duplicat@gmail.com",
 				Password: "duplicate",
 				Role:     "user",
 			},
-			mockBehavior: func(user entities.CreateUser) {
+			mockBehavior: func(user entities.User) {
 				mock.ExpectExec("INSERT INTO users").WithArgs(user.Email, user.Password, user.Role).
 					WillReturnError(&pq.Error{Code: "23505"})
 			},

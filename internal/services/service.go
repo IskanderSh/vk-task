@@ -14,7 +14,7 @@ type ActorService struct {
 }
 
 type ActorStorage interface {
-	CreateActor(actor *entities.CreateActor) error
+	CreateActor(actor *entities.Actor) error
 }
 
 type FilmService struct {
@@ -31,7 +31,7 @@ type UserService struct {
 }
 
 type UserStorage interface {
-	CreateUser(user *entities.CreateUser) error
+	CreateUser(user *entities.User) error
 }
 
 var (

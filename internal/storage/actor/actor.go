@@ -23,7 +23,7 @@ var (
 	ErrDuplicateName = errors.New("actors: duplicate name")
 )
 
-func (s *Storage) CreateActor(actor *entities.CreateActor) error {
+func (s *Storage) CreateActor(actor *entities.Actor) error {
 	const op = "storage.actor.CreateActor"
 
 	_, err := s.db.Exec(createActorQuery, actor.Name, actor.Sex, actor.Birthday)

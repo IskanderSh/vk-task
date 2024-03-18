@@ -21,7 +21,7 @@ func (s *ActorService) AddActor(ctx context.Context, input *models.Actor) error 
 		return wrapper.Wrap(op, ErrInvalidCredentials)
 	}
 
-	actor := entities.CreateActor{
+	actor := entities.Actor{
 		Name:     *input.Name,
 		Sex:      *input.Sex,
 		Birthday: *tm,

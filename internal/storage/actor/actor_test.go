@@ -19,23 +19,23 @@ func TestCreateActor(t *testing.T) {
 
 	storage := NewStorage(db)
 
-	type mockBehavior func(actor entities.CreateActor)
+	type mockBehavior func(actor entities.Actor)
 
 	testTable := []struct {
 		name         string
-		actor        entities.CreateActor
+		actor        entities.Actor
 		mockBehavior mockBehavior
 		wantErr      bool
 		err          error
 	}{
 		{
 			name: "OK",
-			actor: entities.CreateActor{
+			actor: entities.Actor{
 				Name:     "Iskander",
 				Sex:      "male",
 				Birthday: time.Date(2004, 10, 11, 0, 0, 0, 0, time.UTC),
 			},
-			mockBehavior: func(actor entities.CreateActor) {
+			mockBehavior: func(actor entities.Actor) {
 				mock.ExpectExec("INSERT INTO actors").WithArgs(actor.Name, actor.Sex, actor.Birthday).
 					WillReturnResult(sqlmock.NewResult(1, 1))
 			},
@@ -44,12 +44,12 @@ func TestCreateActor(t *testing.T) {
 		},
 		{
 			name: "Duplicate name",
-			actor: entities.CreateActor{
+			actor: entities.Actor{
 				Name:     "Duplicated",
 				Sex:      "female",
 				Birthday: time.Date(2004, 10, 11, 0, 0, 0, 0, time.UTC),
 			},
-			mockBehavior: func(actor entities.CreateActor) {
+			mockBehavior: func(actor entities.Actor) {
 				mock.ExpectExec("INSERT INTO actors").WithArgs(actor.Name, actor.Sex, actor.Birthday).
 					WillReturnError(&pq.Error{Code: "23505"})
 			},

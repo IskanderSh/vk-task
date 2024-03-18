@@ -3,6 +3,8 @@ package services
 import (
 	"context"
 
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/IskanderSh/vk-task/internal/entities"
 	"github.com/IskanderSh/vk-task/internal/generated/models"
 	"github.com/IskanderSh/vk-task/internal/lib/error/wrapper"
@@ -24,9 +26,14 @@ func (s *UserService) AddUser(ctx context.Context, input *models.UserSignUp) err
 		return wrapper.Wrap(op, ErrInvalidCredentials)
 	}
 
-	user := entities.CreateUser{
+	hashPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), 12)
+	if err != nil {
+		return wrapper.Wrap(op, err)
+	}
+
+	user := entities.User{
 		Email:    input.Email,
-		Password: input.Password,
+		Password: string(hashPassword),
 		Role:     input.Role,
 	}
 
@@ -36,3 +43,7 @@ func (s *UserService) AddUser(ctx context.Context, input *models.UserSignUp) err
 
 	return nil
 }
+
+//func Authenticate(ctx context.Context, input *models.UserSignIn) error {
+//
+//}

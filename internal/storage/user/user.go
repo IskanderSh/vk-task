@@ -23,7 +23,7 @@ var (
 	ErrDuplicateEmail = errors.New("users: duplicate email")
 )
 
-func (s *Storage) CreateUser(user *entities.CreateUser) error {
+func (s *Storage) CreateUser(user *entities.User) error {
 	const op = "storage.user.CreateUser"
 
 	_, err := s.db.Exec(createUserQuery, user.Email, user.Password, user.Role)
@@ -39,4 +39,17 @@ func (s *Storage) CreateUser(user *entities.CreateUser) error {
 	}
 
 	return nil
+}
+
+func (s *Storage) GetUser(email string) (*entities.User, error) {
+	const op = "storage.user.GetUser"
+
+	var user entities.User
+
+	row := s.db.QueryRow(getUserQuery, email)
+	if err := row.Scan(&user.ID, &user.Email, &user.Password, &user.Role, &user.CreatedAt); err != nil {
+		return nil, wrapper.Wrap(op, err)
+	}
+
+	return &user, nil
 }

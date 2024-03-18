@@ -2,8 +2,10 @@ package entities
 
 import "time"
 
-type CreateActor struct {
-	Name     string    `db:"name"`
-	Sex      string    `db:"sex"`
-	Birthday time.Time `db:"birthday"`
+type Actor struct {
+	ID        int       `db:"id"`
+	Name      string    `db:"name"`
+	Sex       string    `db:"sex"`
+	Birthday  time.Time `db:"birthday"`
+	CreatedAt time.Time `db:"created_at"`
 }
