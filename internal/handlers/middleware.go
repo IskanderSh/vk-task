@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 
+	"github.com/IskanderSh/vk-task/internal/lib/error/response"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -19,6 +20,7 @@ func (h *Handler) authenticateAdmin(next http.Handler) http.Handler {
 
 		payload, ok := jwtPayloadFromRequest(r, log)
 		if !ok {
+			response.NewErrorResponse(w, log, "Unauthorized user", http.StatusUnauthorized, nil)
 			return
 		}
 
@@ -33,7 +35,13 @@ func AuthenticateUser(next http.Handler) http.Handler {
 }
 
 func jwtPayloadFromRequest(r *http.Request, log *slog.Logger) (jwt.MapClaims, bool) {
-	jwtToken, ok := r.Context().Value("Authenticate").(*jwt.Token)
+	contextValue := r.Context().Value("Authorization")
+	log.Debug(fmt.Sprintf("context value: %s", contextValue))
+
+	headerValue := r.Header.Get("Authorization")
+	log.Debug(fmt.Sprintf("header value: %s", headerValue))
+
+	jwtToken, ok := r.Context().Value("Authorization").(*jwt.Token)
 	if !ok {
 		log.Error("wrong type of JWT token")
 		return nil, false
