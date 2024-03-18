@@ -16,6 +16,8 @@ type ActorService struct {
 
 type ActorStorage interface {
 	CreateActor(actor *entities.Actor) error
+	GetActor(name string) (*entities.Actor, error)
+	UpdateActor(actor *entities.UpdateActor) error
 }
 
 type FilmService struct {
@@ -41,10 +43,14 @@ var (
 	PasswordMaxChars    = 40
 	TokenExpirationTime = time.Hour * 720
 
+	ErrDuplicateName      = errors.New("actor with this name already exists")
+	ErrDuplicateEmail     = errors.New("user with this email already exists")
 	ErrInvalidCredentials = errors.New("invalid credentials")
 	ErrInvalidEmail       = errors.New("incorrect email")
 	ErrInvalidPassword    = errors.New(fmt.Sprintf("password should be more than %d symbols and less than %d",
 		PasswordMinChars, PasswordMaxChars))
+	ErrUserNotFound  = errors.New("no user with this email")
+	ErrActorNotFound = errors.New("no actor with this name")
 )
 
 func NewActorService(log *slog.Logger, storage ActorStorage) *ActorService {

@@ -41,7 +41,7 @@ func (h *Handler) authenticateAdmin(next http.Handler) http.Handler {
 	})
 }
 
-func (h *Handler) AuthenticateUser(next http.Handler) http.Handler {
+func (h *Handler) authenticateUser(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		const op = "middleware.AuthenticateAdmin"
 
