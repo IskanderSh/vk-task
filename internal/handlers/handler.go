@@ -23,6 +23,7 @@ type UserProvider interface {
 type ActorProvider interface {
 	AddActor(ctx context.Context, actor *models.Actor) error
 	UpdateActor(ctx context.Context, input *models.UpdateActor) error
+	DeleteActor(ctx context.Context, name string) error
 }
 
 type FilmProvider interface {

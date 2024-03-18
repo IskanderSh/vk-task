@@ -93,17 +93,17 @@ paths:
           description: Not found actor
         500:
           description: Internal error
-  /api/v1/actor/delete/{id}:
+  /api/v1/actor/delete/{name}:
     delete:
       tags:
         - actor
       summary: deleting actor
       operationId: deleteActor
       parameters:
-        - name: id
+        - name: name
           in: path
-          description: ID of deleting actor
-          type: integer
+          description: name of deleting actor
+          type: string
           required: true
       responses:
         200:

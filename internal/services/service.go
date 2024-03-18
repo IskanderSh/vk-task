@@ -18,6 +18,7 @@ type ActorStorage interface {
 	CreateActor(actor *entities.Actor) error
 	GetActor(name string) (*entities.Actor, error)
 	UpdateActor(actor *entities.UpdateActor) error
+	DeleteActor(name string) error
 }
 
 type FilmService struct {

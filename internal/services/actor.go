@@ -81,3 +81,21 @@ func (s *ActorService) UpdateActor(ctx context.Context, input *models.UpdateActo
 
 	return nil
 }
+
+func (s *ActorService) DeleteActor(ctx context.Context, name string) error {
+	const op = "service.actor.UpdateActor"
+
+	log := s.log.With(slog.String("op", op))
+
+	_, err := s.storage.GetActor(name)
+	if err != nil {
+		log.Warn("actor with that name don't exists")
+		return ErrActorNotFound
+	}
+
+	if err := s.storage.DeleteActor(name); err != nil {
+		return wrapper.Wrap(op, err)
+	}
+
+	return nil
+}
