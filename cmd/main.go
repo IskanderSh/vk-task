@@ -1,9 +1,12 @@
 package main
 
 import (
+	"context"
 	"log/slog"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 
 	"github.com/IskanderSh/vk-task/internal/app"
 	"github.com/IskanderSh/vk-task/internal/config"
@@ -25,12 +28,23 @@ func main() {
 	log := setupLogger(cfg)
 	log.Info("logger initialized successfully")
 
-	err := app.NewServer(log, cfg)
-	if err != nil {
-		log.Error(err.Error())
-	}
-
+	application := app.NewServer(log, cfg)
+	go func() {
+		if err := application.HTTPServer.ListenAndServe(); err != nil {
+			log.Error(err.Error())
+		}
+	}()
 	log.Info("application started successfully")
+
+	// graceful shutdown
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
+
+	sign := <-stop
+	log.Info("stopping application", slog.String("signal", sign.String()))
+	application.HTTPServer.Shutdown(context.Background())
+
+	log.Info("application stopped")
 }
 
 func setupLogger(cfg *config.Config) *slog.Logger {
