@@ -11,6 +11,7 @@ import (
 	"github.com/IskanderSh/vk-task/internal/services"
 	"github.com/IskanderSh/vk-task/internal/storage"
 	"github.com/IskanderSh/vk-task/internal/storage/actor"
+	"github.com/IskanderSh/vk-task/internal/storage/film"
 	"github.com/IskanderSh/vk-task/internal/storage/user"
 )
 
@@ -27,10 +28,11 @@ func NewServer(log *slog.Logger, cfg *config.Config) *Server {
 
 	actorStorage := actor.NewStorage(db)
 	userStorage := user.NewStorage(db)
+	filmStorage := film.NewStorage(db)
 
 	// Services
 	actorService := services.NewActorService(log, actorStorage)
-	filmService := services.NewFilmService(log, db)
+	filmService := services.NewFilmService(log, filmStorage)
 	userService := services.NewUserService(log, userStorage)
 
 	// Handlers

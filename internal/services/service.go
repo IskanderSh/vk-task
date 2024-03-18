@@ -27,6 +27,10 @@ type FilmService struct {
 }
 
 type FilmStorage interface {
+	CreateFilm(film *entities.Film) error
+	GetFilm(name string) (*entities.Film, error)
+	UpdateFilm(film *entities.UpdateFilm) error
+	DeleteFilm(name string) error
 }
 
 type UserService struct {
@@ -52,6 +56,7 @@ var (
 		PasswordMinChars, PasswordMaxChars))
 	ErrUserNotFound  = errors.New("no user with this email")
 	ErrActorNotFound = errors.New("no actor with this name")
+	ErrFilmNotFound  = errors.New("no film with this name")
 )
 
 func NewActorService(log *slog.Logger, storage ActorStorage) *ActorService {
