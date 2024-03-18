@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"log/slog"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -14,7 +15,7 @@ import (
 )
 
 var (
-	signingKey = "qrkjk#4#%35FSFJlja#4353KSFjH"
+	signingKey = []byte("qrkjk#4#%35FSFJlja#4353KSFjH")
 )
 
 func (s *UserService) AddUser(ctx context.Context, input *models.UserSignUp) error {
@@ -53,6 +54,9 @@ func (s *UserService) AddUser(ctx context.Context, input *models.UserSignUp) err
 func (s *UserService) Login(ctx context.Context, input *models.UserSignIn) (string, error) {
 	const op = "service.Authenticate"
 
+	log := s.log.With(
+		slog.String("op", op))
+
 	if !validator.Matches(*input.Email, validator.ValidEmail) {
 		return "", wrapper.Wrap(op, ErrInvalidEmail)
 	}
@@ -60,6 +64,7 @@ func (s *UserService) Login(ctx context.Context, input *models.UserSignIn) (stri
 	if !validator.StringValueBetween(*input.Password, PasswordMinChars, PasswordMaxChars) {
 		return "", wrapper.Wrap(op, ErrInvalidPassword)
 	}
+	log.Debug("successfully validate body params")
 
 	actor, err := s.storage.GetUser(*input.Email)
 	if err != nil {
@@ -69,6 +74,7 @@ func (s *UserService) Login(ctx context.Context, input *models.UserSignIn) (stri
 	if err := bcrypt.CompareHashAndPassword([]byte(actor.Password), []byte(*input.Password)); err != nil {
 		return "", wrapper.Wrap(op, ErrInvalidPassword)
 	}
+	log.Debug("password is correct")
 
 	payload := jwt.MapClaims{
 		"sub":  actor.Email,
