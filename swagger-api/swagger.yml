@@ -133,6 +133,127 @@ paths:
           description: Bad request
         500:
           description: Internal error
+  /api/v1/film/update:
+    put:
+      tags:
+        - film
+      summary: updating film's information
+      operationId: updateFilm
+      parameters:
+        - in: body
+          name: updateFilm
+          description: The body of updating film
+          schema:
+            $ref: '#/definitions/UpdateFilm'
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad request
+        404:
+          description: Not found actor
+        500:
+          description: Internal error
+  /api/v1/film/delete/{id}:
+    delete:
+      tags:
+        - film
+      summary: deleting film
+      operationId: deleteFilm
+      parameters:
+        - name: id
+          in: path
+          description: ID of deleting film
+          type: integer
+          required: true
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad request
+        404:
+          description: Not found actor
+        500:
+          description: Internal error
+  /api/v1/films/{sortby}:
+    get:
+      tags:
+        - film
+      summary: getting films, sorting by (rating, name, date)
+      operationId: films
+      parameters:
+        - name: sortby
+          in: path
+          description: sort by which param
+          type: string
+          required: true
+          default: rating
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Film'
+        500:
+          description: Internal error
+  /api/v1/films/name/{name}:
+    get:
+      tags:
+        - film
+      summary: getting films by fragment of name
+      operationId: filmsByName
+      parameters:
+        - name: name
+          in: path
+          description: name fragment of film
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Film'
+        500:
+          description: Internal error
+  /api/v1/films/actor/{name}:
+    get:
+      tags:
+        - film
+      summary: getting films by fragment of actor's name
+      operationId: filmsByActor
+      parameters:
+        - name: name
+          in: path
+          description: actor's name fragment of film
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Film'
+        500:
+          description: Internal error
+  /api/v1/actors:
+    get:
+      tags:
+        - actor
+      summary: getting actors and films with them
+      operationId: actorsWithFilms
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActorsWithFilms'
+        500:
+          description: Internal error
 
 definitions:
   UserSignUp:
@@ -195,5 +316,44 @@ definitions:
         minimum: 0
         maximum: 10
       actors:
-        allOf:
-          - type: string
+        type: array
+        items:
+          type: string
+    required:
+      - name
+      - date
+      - rating
+      - actors
+  UpdateFilm:
+    properties:
+      name:
+        type: string
+        minLength: 1
+        maxLength: 150
+      description:
+        type: string
+        maxLength: 1000
+      date:
+        type: string
+        format: date
+      rating:
+        type: integer
+        minimum: 0
+        maximum: 10
+      actors:
+        type: array
+        items:
+          type: string
+  ActorsWithFilms:
+    properties:
+      name:
+        type: string
+      sex:
+        type: string
+      birthday:
+        type: string
+        format: date
+      films:
+        type: array
+        items:
+          type: string

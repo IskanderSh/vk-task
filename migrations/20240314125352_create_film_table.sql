@@ -4,9 +4,9 @@ CREATE TABLE IF NOT EXISTS films (
     id SERIAL PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
     description VARCHAR(1000),
-    date DATE,
-    rating INTEGER,
-    actors TEXT[],
+    date DATE NOT NULL,
+    rating INTEGER NOT NULL,
+    actors TEXT[] NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 -- +goose StatementEnd
