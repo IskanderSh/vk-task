@@ -17,6 +17,7 @@ type Handler struct {
 
 type UserProvider interface {
 	AddUser(ctx context.Context, input *models.UserSignUp) error
+	Login(ctx context.Context, input *models.UserSignIn) (string, error)
 }
 
 type ActorProvider interface {
@@ -43,7 +44,7 @@ func NewHandler(
 func (h *Handler) Routes() *http.ServeMux {
 	router := http.NewServeMux()
 
-	router.HandleFunc("/api/v1/actor/create", h.createActor)
+	router.Handle("/api/v1/actor/create", h.authenticateAdmin(http.HandlerFunc(h.createActor)))
 
 	return router
 }

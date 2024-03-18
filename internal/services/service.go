@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"time"
 
 	"github.com/IskanderSh/vk-task/internal/entities"
 )
@@ -32,11 +33,13 @@ type UserService struct {
 
 type UserStorage interface {
 	CreateUser(user *entities.User) error
+	GetUser(email string) (*entities.User, error)
 }
 
 var (
-	PasswordMinChars = 4
-	PasswordMaxChars = 40
+	PasswordMinChars    = 4
+	PasswordMaxChars    = 40
+	TokenExpirationTime = time.Hour * 720
 
 	ErrInvalidCredentials = errors.New("invalid credentials")
 	ErrInvalidEmail       = errors.New("incorrect email")
